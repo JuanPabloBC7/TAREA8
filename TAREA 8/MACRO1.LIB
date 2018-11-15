@@ -1,0 +1,33 @@
+	
+	OPERACION1 MACRO A,B,C,OP1D,OP1U
+        MOV AL,A
+        ADD AL,B
+        SUB AL,C
+	AAM
+	ADD AX,3030H
+	MOV OP1D,AH
+	MOV OP1U,AL
+        ENDM
+	
+	OPERACION2 MACRO A,B,C,OP2D,OP2U
+        MOV AL,A
+        ADD AL,C
+        MUL B
+        MOV OP2D,AL
+        MOV AL,2D
+        MUL B
+        ADD AL,OP2D
+	AAM 
+	ADD AX,3030H
+	MOV OP2D,AH
+	MOV OP2U,AL
+        ENDM
+	
+	OPERACION3 MACRO A,B,C,OP3C,OP3R
+        MOV AL,A
+        MUL B
+        DIV C
+	ADD AX,3030H
+	MOV OP3C,AH
+	MOV OP3R,AL
+        ENDM

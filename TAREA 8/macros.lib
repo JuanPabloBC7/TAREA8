@@ -1,0 +1,86 @@
+;*********************************************************************
+;Macro: GotoXY
+;Descripción: Coloca el cursor una posición especifica de la pantalla
+;Parámetros: Posición en X y posición en Y
+;*********************************************************************
+	GotoXY Macro  X,Y
+		Mov Dl,X
+		Mov Dh,y
+		Xor Bh,Bh	;limpiar el registro BH
+		Mov Ah,02h	;Se mueve el código de función de la interrupción 10h
+		Int 10h		;Se llama a la interrupción 10H
+	ENDM GotoXY
+;***********************************************************************
+;Macro: ImprimeCadena
+;Descripción: Imprime una cadena de caracteres en la posición del cursor
+;Parámetros: La cadena a imprimir
+;***********************************************************************
+	ImprimeCadena Macro  Cadena
+		Lea DX,Cadena
+		Mov Ah,09h	;Se muevel el código para la impresión de una cadena terminada por $
+		Int 21h		;Se invoca a la rutina 21h
+	ENDM ImprimeCadena
+
+;***********************************************************************
+;Macro: CapturaCadena
+;Descripción: Captura una cadena desde teclado
+;Parámetros: La cadena a capturar
+;***********************************************************************
+
+	
+	CapturaCadena Macro Cadena
+		Lea DI,Cadena
+		Mov AH,01
+		Leer:
+			int 21h
+			cmp AL, 0Dh
+			je SalirCaptura
+			Mov [DI],AL
+			Inc DI
+			Inc Longitud
+			jmp Leer
+		SalirCaptura:
+			Inc DI			
+	Endm
+	
+	
+;***********************************************************************
+;Macro: CapturaPosMatriz
+;Descripción: Captura un numero desde teclado
+;Parámetros: Variable para almacenar el número y posición en donde se almacenará
+;***********************************************************************
+
+	
+	CapturaNumero Macro Variable
+		Mov AH,01
+		int 21h
+		SUB AL,30H
+		Mov Variable,AL
+	Endm
+
+	
+	PrintNumero Macro Numero
+		Mov AL, Numero
+		AAM
+		ADD AX,3030H
+		MOV BL,AL
+		MOV DL,AH			
+		MOV AH,02H
+		INT 21H	
+		MOV DL,BL
+		MOV AH,02H
+		INT 21H	
+	endm
+	
+	Mapeo Macro I,J,Filas,Columna,Tamano
+		Mov AL,I
+		Mov Bl,Filas
+		Mul Bl
+		Mov BL,Tamano
+		Mul BL
+		Mov CL,AL
+		Mov AL,J
+		Mov BL,Tamano
+		Mul BL
+		Add AL,CL
+	endm
